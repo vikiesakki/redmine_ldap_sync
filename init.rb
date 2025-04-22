@@ -1,5 +1,5 @@
 require 'redmine'
-
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/lib/"
 Redmine::Plugin.register :redmine_ldap_sync do
   name 'Redmine LDAP Sync'
   author 'Ricardo Santos'
@@ -12,12 +12,14 @@ Redmine::Plugin.register :redmine_ldap_sync do
   settings :default => HashWithIndifferentAccess.new()
   menu :admin_menu, :ldap_sync, { :controller => 'ldap_settings', :action => 'index' }, :caption => :label_ldap_synchronization,
                     :html => {:class => 'icon icon-ldap-sync'}
+  ::User::STANDARD_FIELDS = %w( firstname lastname mail )
+  require 'ldap_sync'
 end
 
-RedmineApp::Application.config.after_initialize do
-  require_dependency 'ldap_sync/core_ext'
-  require_dependency 'ldap_sync/infectors'
-end
+# RedmineApp::Application.config.after_initialize do
+#   require_dependency 'ldap_sync/core_ext'
+#   require_dependency 'ldap_sync/infectors'
+# end
 
 # hooks
-require_dependency 'ldap_sync/hooks'
+# require_dependency 'ldap_sync/hooks'
